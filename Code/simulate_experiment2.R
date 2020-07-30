@@ -84,10 +84,14 @@ for(i in 1:animals.max){
     ## test if animals contributing to BLI signal have a significant correlation 
     ## between simulated tumor biomass and simulated BLI signal with 
     ## a correlation-coefficient > 0.7
-    .[, .(corr = summary(lm(Tumor.sim ~ BLI.sim))$coefficients %>%
+    .[, .(corr = sqrt(summary(lm(Tumor.sim ~ BLI.sim))$r.squared) %>%
             as.data.table() %>% 
             .[NROW(.), 1] %>% 
             unlist(), 
+          #p-value for whole model is the same es for regressor when only one
+          #regressor is fitted, otherwise use pf() to retrieve p-value from
+          #fstatistics
+          #pf(ff[1], ff[2], ff[3], lower.tail=FALSE)
           cor.p = summary(lm(Tumor.sim ~ BLI.sim))$coefficients %>% 
             as.data.table() %>% 
             .[NROW(.),4] %>% 
@@ -98,7 +102,7 @@ for(i in 1:animals.max){
             unlist(),
           N = .N), sim.run] %>% 
     .[, cor.sig := FALSE] %>% 
-    .[cor.n ==2 & cor.p <= 0.05 & corr > 0.7, cor.sig := TRUE]
+    .[cor.n ==2 & cor.p <= 0.05 & corr > 0.8, cor.sig := TRUE]
 
   ## calculate percentage of experiments meeting the requirements = Power
   res[i, Power := tdat[, sum(cor.sig)/n.bootstrap * 100]]

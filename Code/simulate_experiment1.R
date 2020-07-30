@@ -24,7 +24,7 @@ for(i in 1:n.max){
     res[i, jj] <- sampleMice(i, .Stamm = Stamm) %>% 
       .[, Tumoranzahl := Tumoranzahl] %>% 
       ## counting animals with more than 1 tumor
-      .[Tumoranzahl > 1, .N]
+      .[Tumoranzahl >= 2, .N]
   }
 }
 

@@ -37,7 +37,7 @@ Survdat <- copy(Data) %>%
   .[is.na(time), time := BLI] %>% 
   .[is.na(time), time := 80] %>% 
   .[, Event := 0] %>% 
-  .[!is.na(Abbruch), Event := 1] 
+  .[!is.na(Abbruch), Event := 1]
 
 
 sfit <- survfit(Surv(time, Event) ~ Mausstamm, data = Survdat)
@@ -46,7 +46,7 @@ sdifffit <- survdiff(km ~ Mausstamm, data = Survdat)
 
 
 ggsurvplot(fit = sfit, conf.int = TRUE) +
-  ggtitle("Instilldauer = 120 min")
+  ggtitle("Instilldauer = 120 min") 
 
 ggsave(
   paste0("./Results/Survival-Mausstaemme.png"), 
@@ -86,7 +86,7 @@ for(i in seq_along(animals)) {
     
     ## Extract t_S50 from the survival model and check if it is within the 
     ## required precsion range
-    res.median[i, jj] <- (summary(sfit)$table["median"] >= 35) & (summary(sfit)$table["median"] <= 39)
+    res.median[i, jj] <- (summary(sfit)$table["median"] >= 35.625) & (summary(sfit)$table["median"] <= 39.375)
   }
 }
 
@@ -99,7 +99,7 @@ erg <- data.table(Tierzahl = animals, Power = erg)
 
 
 ##### visualize result #####
-ggplot(erg, aes(Tierzahl, round(Power/100,2))) +
+ggplot(erg[Tierzahl %in% seq(0,30,2)], aes(Tierzahl, round(Power/100,2))) +
   geom_coltext() +
   ylab("Power") +
   ylab("Power") +
