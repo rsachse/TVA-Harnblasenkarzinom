@@ -99,7 +99,7 @@ erg <- data.table(Tierzahl = animals, Power = erg)
 
 
 ##### visualize result #####
-ggplot(erg[Tierzahl %in% seq(0,30,2)], aes(Tierzahl, round(Power/100,2))) +
+ggplot(erg[Tierzahl %in% seq(2,30,2)], aes(Tierzahl, round(Power/100,2))) +
   geom_coltext() +
   ylab("Power") +
   ylab("Power") +

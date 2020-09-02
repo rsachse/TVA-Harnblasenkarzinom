@@ -102,7 +102,7 @@ for(i in 1:animals.max){
             unlist(),
           N = .N), sim.run] %>% 
     .[, cor.sig := FALSE] %>% 
-    .[cor.n ==2 & cor.p <= 0.05 & corr > 0.8, cor.sig := TRUE]
+    .[cor.n ==2 & cor.p <= 0.05 & corr > 0.95, cor.sig := TRUE]
 
   ## calculate percentage of experiments meeting the requirements = Power
   res[i, Power := tdat[, sum(cor.sig)/n.bootstrap * 100]]
@@ -111,13 +111,13 @@ for(i in 1:animals.max){
 
 
 ##### visualize result #####
-ggplot(res, aes(Tierzahl, Power/100)) +
+ggplot(res[Tierzahl %in% seq(2,10,2)], aes(Tierzahl, Power/100)) +
   geom_coltext()+
   #ggtitle(paste0("Experiment 2, Stamm ", Stamm)) +
   #ylim(0,100) +
   ylab("Power") +
   xlab("Tierzahl je Zeitstufe")+
-  scale_x_continuous(labels = 1:10, breaks = 1:10)+
+  scale_x_continuous(labels = seq(2,10,2), breaks = seq(2,10,2))+
   geom_hline(aes(yintercept = 0.8, color = "organge"))
 
 ggsave(paste0("./Results/Power-Experiment2-Stamm",Stamm,".png"), width = 15, height= 10, units = "cm")
